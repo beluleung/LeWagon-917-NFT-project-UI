@@ -1,74 +1,118 @@
+from urllib.request import urlopen
 import streamlit as st
+from PIL import Image
 import requests
+from dotenv import load_dotenv
+import os
 
-import numpy as np
-import pandas as pd
 
-## Markdown to style and fill content in your page
-st.markdown("""
-            # 😸🐶 AI generate NFT for your pet
-            """)
+# Set page tab display
+st.set_page_config(
+   page_title="Pawlaroid NFT",
+   page_icon= '🐾',
+   layout="wide",
+   initial_sidebar_state="expanded",
+)
 
-st.image("https://thenftunicorn.com/wp-content/uploads/2022/06/Metaimage_petaverse-1.jpg")
+# Session State also supports attribute based syntax
+if 'check' not in st.session_state:
+    st.session_state.check = False
+
+if 'gan_res' not in st.session_state:
+    st.session_state.gan_res = False
+
+if 'pet_picked' not in st.session_state:
+    st.session_state.pet_picked = False
+
+if 'transforming' not in st.session_state:
+    st.session_state.transforming = False
+
+if 'tracker' not in st.session_state:
+    st.session_state.trakcer = False
+
+
+
+
+# api url
+bg_url = 'https://rembg-with-model-xu4pc2grda-ew.a.run.app'
+nft_url = 'https://gcp-gan-guttercatgang-v2-l6f5cicmxa-as.a.run.app/guttercatgang'
+trans_url = 'http://35.202.125.100:9000'
+
+# Cover and title of app
+st.image('NFT (Community).png', width=1300)
+st.markdown("---")
+
+
+#### automatically generate nft in middle block
+
+def picked_pet():
+    st.session_state.pet_picked = True
+
+def unset_nft():
+    st.session_state.pet_picked = True
+    st.session_state.transforming = False
+
+def persist_nft():
+    st.session_state.transforming = True
 
 col1, col2 = st.columns(2)
-
 with col1:
-  date = st.date_input("Please enter date")
+    st.markdown("## 🔥 NFT of the day 🔥")
+    st.session_state.check = st.radio('Choose your pet first', options=('Dog 🐶', 'Cat 😺'), on_change=picked_pet)
+    nft_image_box = st.empty()
+    if st.session_state.pet_picked:
+        if not st.session_state.transforming:
+            if st.session_state.check  == 'Cat 😺':
+                with st.spinner("Wait for it..."):
+                    nft_content = requests.get(nft_url).content
+                    st.session_state.gan_res = requests.post(bg_url+'/colour_nft', files={'img':nft_content}).content
+            else:
+                nft_content = requests.get(nft_url).content
+                st.session_state.gan_res = requests.post(bg_url+'/colour_nft', files={'img':nft_content}).content
+
+        st.image(st.session_state.gan_res, caption="Your AI generated NFT ⭐️", width=400)
+
+
+### third layers for buttons
+
+col4, col5, col6, col7, col8, col9 = st.columns(6)
+with col4:
+    if st.button('Another style', on_click=unset_nft):
+        st.write("'til you're satisfied")
+
+
+with col5:
+    st.button('Transform Your Pet', on_click=persist_nft)
 
 with col2:
-  time = st.time_input("Please enter time")
+    if st.session_state.transforming:
+        # upload the pet image
+        st.markdown("#### One click to upload 👇")
+        st.session_state.img_file_buffer = st.file_uploader(f"Upload your {st.session_state.check} image")
+        # creating the imagelocation to replace images
+        if st.session_state.img_file_buffer:
+            imageLocation = st.empty()
+            img_bytes = st.session_state.img_file_buffer.getvalue()
+            old_image = Image.open(st.session_state.img_file_buffer)
+            imageLocation.image(old_image, caption="Here's the image you uploaded ☝️", output_format='JPEG', width=190)
 
+        # preprocessing the image
+            with st.spinner("Wait for it..."):
+            # remove the pet image bg via api
+                res = requests.post(bg_url + "/rmimg", files={'img':img_bytes})
+                if res.status_code == 200:
+                    preproecessing = imageLocation.image(res.content, caption="Preprocessed successfully ☝️", width=190)
+                    st.session_state.tracker = st.success('Starting transforming ', icon="✅")
 
-psngr_count = st.slider("How many passengers are you?", 1, 10)
-
-pickup = st.text_input("Your pickup address")
-
-if pickup:
-  geo_url = f"https://nominatim.openstreetmap.org/search?q={pickup}&format=jsonv2"
-  res = requests.get(geo_url).json()
-  try:
-    pickup_lat = res[0]['lat']
-    pickup_lon = res[0]['lon']
-  except IndexError:
-    st.write("🤯 sorry we couldn't find you, please try again!")
-
-dropoff = st.text_input("Your dropoff address")
-
-if dropoff:
-  geo_url = f"https://nominatim.openstreetmap.org/search?q={dropoff}&format=jsonv2"
-  res = requests.get(geo_url).json()
-  try:
-    dropoff_lat = res[0]['lat']
-    dropoff_lon = res[0]['lon']
-  except IndexError:
-    st.write("🤯 sorry we couldn't find you, please try again!")
-
-if st.button("Predict Fare"):
-  params = {
-    "pickup_datetime": f"{date} {time}",
-    "pickup_latitude": pickup_lat,
-    "pickup_longitude": pickup_lon,
-    "dropoff_latitude": dropoff_lat,
-    "dropoff_longitude": dropoff_lon,
-    "passenger_count": psngr_count
-  }
-  api_url = "https://taxifare-api-x4gzhnh2ta-uw.a.run.app/predict"
-  res = requests.get(api_url, params).json()
-
-  st.write("""
-          <style>
-            .headline {
-                font-family: MicSans,sans-serif;
-                font-size: 20px;
-                font-weight: 700;
-                line-height: 1.5;
-                background-color: black;
-                box-shadow: 8px 1px 0 3px black, -8px 1px 0 3px black;
-                color: pink;
-                padding: 20px;
-            }
-          </style>
-          """
-          + f'<h1 class="headline">{round(res["fare"], 2)} USD</h1>'
-          , unsafe_allow_html=True)
+# transforming the pet with genereted nft
+st.markdown("---")
+c1, c2, c3 = st.columns(3)
+with c2:
+    if st.session_state.trakcer:
+        st.write('NFT of your pet! 😺 🐶')
+        with st.spinner("Wait for it..."):
+            trans_res = requests.post(trans_url + '/generate', files={'style_image':res.content ,'content_image':st.session_state.gan_res}, stream=True)
+            st.write(trans_res.status_code)
+            if trans_res.status_code == 200:
+                    st.write('## YOUR PAWLAROID NFT 🐾')
+                    st.image(trans_res.content, caption=" ", width=400)
