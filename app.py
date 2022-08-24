@@ -103,7 +103,8 @@ with col2:
             # remove the pet image bg via api
                 res = requests.post(bg_url + "/rmimg", files={'img':img_bytes})
                 if res.status_code == 200:
-                    preproecessing = imageLocation.image(res.content, caption="Preprocessed successfully ☝️", width=190)
+                    st.session_state.preproecessing = res.content
+                    imageLocation.image(st.session_state.preproecessing, caption="Preprocessed successfully ☝️", width=190)
                     st.session_state.tracker = st.success('Starting transforming ', icon="✅")
 
 # transforming the pet with genereted nft
@@ -121,13 +122,17 @@ with c2:
         with st.spinner("Wait for it..."):
             s = requests.Session()
             imageLocation1 = st.empty()
-            with s.get(trans_url + '/generate', params=params, stream=True) as trans_res:
-                print(trans_res.headers)
-                for line in trans_res.iter_content(chunk_size=786465):
+            with s.post(trans_url + '/generate',files={'style_image':st.session_state.preproecessing,
+                                                       'content_image':st.session_state.gan_res},
+                                                       params=params, stream=True
+                                                       ) as trans_res:
+                print('----- trans_res.headers ------', trans_res.headers)
+                for line in trans_res.iter_content(chunk_size=786432):
+                    print('----- line length ------', len(line))
                     img = Image.frombytes('RGB', (512,512), line, 'raw')
                     imageLocation1.image(img)
 
-st.session_state.style = st.select_slider(
-     'Customizing your NFT',
-     options=['more pet', ' pet', 'original', 'NFT', 'more NFT'])
-st.write('My favorite style is', st.session_state.style)
+# st.session_state.style = st.select_slider(
+#      'Customizing your NFT',
+#      options=['more pet', ' pet', 'original', 'NFT', 'more NFT'])
+# st.write('My favorite style is', st.session_state.style)
