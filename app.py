@@ -25,15 +25,16 @@ if 'transforming' not in st.session_state:
     st.session_state.transforming = False
 
 if 'tracker' not in st.session_state:
-    st.session_state.trakcer = False
+    st.session_state.tracker = False
 
 
 
 
 # api url
 bg_url = 'https://rembg-with-model-xu4pc2grda-ew.a.run.app'
-nft_url = 'https://gcp-gan-guttercatgang-v2-l6f5cicmxa-as.a.run.app/guttercatgang'
-trans_url = 'http://35.202.125.100:9000'
+cat_url = 'https://gan-api-l6f5cicmxa-as.a.run.app/guttercatgang'
+dog_url = 'https://gan-api-l6f5cicmxa-as.a.run.app/gutterdogsE400'
+trans_url = 'http://34.133.155.163:9000'
 
 # Cover and title of app
 st.image('NFT_cover.png', width=1300)
@@ -55,16 +56,17 @@ def persist_nft():
 col1, col2 = st.columns(2)
 with col1:
     st.markdown("## 🔥 NFT of the day 🔥")
-    st.session_state.check = st.radio('Choose your pet first', options=('Dog 🐶', 'Cat 😺'), on_change=picked_pet)
+    st.markdown("#### Unique NFT made by AI")
+    st.session_state.check = st.radio('Choose a pet!', options=('Dog 🐶', 'Cat 😺'), on_change=picked_pet)
     nft_image_box = st.empty()
     if st.session_state.pet_picked:
         if not st.session_state.transforming:
             if st.session_state.check  == 'Cat 😺':
                 with st.spinner("Wait for it..."):
-                    nft_content = requests.get(nft_url).content
+                    nft_content = requests.get(cat_url).content
                     st.session_state.gan_res = requests.post(bg_url+'/colour_nft', files={'img':nft_content}).content
             else:
-                nft_content = requests.get(nft_url).content
+                nft_content = requests.get(dog_url).content
                 st.session_state.gan_res = requests.post(bg_url+'/colour_nft', files={'img':nft_content}).content
 
         st.image(st.session_state.gan_res, caption="Your AI generated NFT ⭐️", width=400)
@@ -74,7 +76,7 @@ with col1:
 
 col4, col5, col6, col7, col8, col9 = st.columns(6)
 with col4:
-    if st.button('Another style', on_click=unset_nft):
+    if st.button('Generate new', on_click=unset_nft):
         st.write("'til you're satisfied")
 
 
@@ -104,12 +106,18 @@ with col2:
 # transforming the pet with genereted nft
 st.markdown("---")
 c1, c2, c3 = st.columns(3)
+params = {'epochs' : 20,
+        'steps_per_epoch' : 100,
+        'style_weight' : 0.009,
+        'content_weight' : 0.1,
+        'total_variation_weight' : 2}
 with c2:
-    if st.session_state.trakcer:
-        st.write('NFT of your pet! 😺 🐶')
+    if st.session_state.tracker:
+        st.write("### Your Pawlaroid NFT 😺🐶")
         with st.spinner("Wait for it..."):
-            trans_res = requests.post(trans_url + '/generate', files={'style_image':res.content ,'content_image':st.session_state.gan_res}, stream=True)
+            trans_res = requests.post(trans_url + '/generate', files={'style_image':res.content ,'content_image':st.session_state.gan_res}, params=params, stream=True)
             st.write(trans_res.status_code)
+            st.write(trans_res.content)
             if trans_res.status_code == 200:
                     st.write('## YOUR PAWLAROID NFT 🐾')
                     st.image(trans_res.content, caption=" ", width=400)
