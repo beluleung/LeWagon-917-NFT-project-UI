@@ -123,15 +123,10 @@ with c2:
             s = requests.Session()
             imageLocation1 = st.empty()
             with s.get(trans_url + '/generate', params=params, stream=True) as trans_res:
-                b = b''
                 print(trans_res.headers)
                 for line in trans_res.iter_content(chunk_size=786465):
-                    print(len(line))
-                    b += line
-                    if len(b) == 786465:
-                        img = Image.frombytes('RGB', (512,512), b, 'raw')
-                        imageLocation1.image(img)
-                        b = b''
+                    img = Image.frombytes('RGB', (512,512), line, 'raw')
+                    imageLocation1.image(img)
 
 st.session_state.style = st.select_slider(
      'Customizing your NFT',
