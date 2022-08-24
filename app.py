@@ -36,7 +36,7 @@ nft_url = 'https://gcp-gan-guttercatgang-v2-l6f5cicmxa-as.a.run.app/guttercatgan
 trans_url = 'http://35.202.125.100:9000'
 
 # Cover and title of app
-st.image('NFT (Community).png', width=1300)
+st.image('NFT_cover.png', width=1300)
 st.markdown("---")
 
 
