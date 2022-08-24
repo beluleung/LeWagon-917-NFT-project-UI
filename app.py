@@ -110,8 +110,8 @@ with col2:
 # transforming the pet with genereted nft
 st.markdown("---")
 c1, c2, c3 = st.columns(3)
-params = {'epochs' : 10,
-        'steps_per_epoch' : 10,
+params = {'epochs' : 100,
+        'steps_per_epoch' : 20,
         'style_weight' : 0.009,
         'content_weight' : 0.1,
         'total_variation_weight' : 2}
