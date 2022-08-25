@@ -114,7 +114,7 @@ st.markdown("---")
 c1, c2, c3 = st.columns(3)
 c4, c5, c6 = st.columns(3)
 
-params = {'epochs' : 100,
+params = {'epochs' : 70,
         'steps_per_epoch' : 20,
         'style_weight' : 0.05,
         'content_weight' : 0.09,
