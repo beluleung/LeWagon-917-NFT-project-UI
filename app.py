@@ -36,7 +36,7 @@ if 'style' not in st.session_state:
 # api url
 bg_url = 'https://rembg-with-model-xu4pc2grda-ew.a.run.app'
 cat_url = 'https://gan-api-l6f5cicmxa-ew.a.run.app/guttercatgang'
-dog_url = 'https://gan-api-l6f5cicmxa-ew.a.run.app/thedogepoundE450'
+dog_url = 'https://gan-api-l6f5cicmxa-ew.a.run.app/gutterdogsE400'
 trans_url = 'http://34.70.32.163:9000'
 
 # Cover and title of app
@@ -116,7 +116,7 @@ c4, c5, c6 = st.columns(3)
 
 params = {'epochs' : 100,
         'steps_per_epoch' : 20,
-        'style_weight' : 0.02,
+        'style_weight' : 0.05,
         'content_weight' : 0.1,
         'total_variation_weight' : 2}
 
