@@ -60,7 +60,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown("## 🔥 NFT OF THE DAY 🔥")
     st.markdown("#### ---- Pet NFT made by AI ----")
-    st.session_state.check = st.radio('Choose a pet!', options=('Dog 🐶', 'Cat 😺'), on_change=picked_pet)
+    st.session_state.check = st.radio('Choose a pet!', options=('Cat 😺','Dog 🐶'), on_change=picked_pet)
     nft_image_box = st.empty()
     if st.session_state.pet_picked:
         if not st.session_state.transforming:
@@ -105,29 +105,41 @@ with col2:
                 if res.status_code == 200:
                     st.session_state.preproecessing = res.content
                     imageLocation.image(st.session_state.preproecessing, caption="Preprocessed successfully ☝️", width=190)
-                    st.session_state.tracker = st.success('Starting transforming ', icon="✅")
+                    st.session_state.tracker = st.success('Scrolling down for transforming result', icon="⬇️")
 
 # transforming the pet with genereted nft
+# output processing session
+
 st.markdown("---")
 c1, c2, c3 = st.columns(3)
+c4, c5, c6 = st.columns(3)
+
 params = {'epochs' : 100,
         'steps_per_epoch' : 20,
         'style_weight' : 0.009,
         'content_weight' : 0.1,
         'total_variation_weight' : 2}
 
+with c2:
+        st.write("### 😺 YOUR PAWLAROID NFT 🐶")
+
 if st.session_state.tracker:
-    s = requests.Session()
-    imageLocation1 = st.empty()
-    with s.post(trans_url + '/generate',files={'style_image':st.session_state.preproecessing,
-                                                'content_image':st.session_state.gan_res},
-                                                params=params, stream=True
-                                                ) as trans_res:
-        print('----- trans_res.headers ------', trans_res.headers)
-        for line in trans_res.iter_content(chunk_size=786432):
-            print('----- line length ------', len(line))
-            img = Image.frombytes('RGB', (512,512), line, 'raw')
-            imageLocation1.image(img)
+    with c4:
+        st.image(st.session_state.gan_res, caption='ARTIST')
+    with c5:
+        st.image(st.session_state.preproecessing, width=320, caption='STYLIST')
+    with c6:
+        s = requests.Session()
+        imageLocation1 = st.empty()
+        with st.spinner("Wait for it..."):
+            with s.post(trans_url + '/generate',files={'style_image':st.session_state.preproecessing,
+                                                        'content_image':st.session_state.gan_res},
+                                                        params=params, stream=True
+                                                        ) as trans_res:
+                for line in trans_res.iter_content(chunk_size=786432):
+                    img = Image.frombytes('RGB', (512,512), line, 'raw')
+                    imageLocation1.image(img, caption='FINAL OUTPUT')
+                    st.success('MINT IT AND R$ICH NOW', icon="💰")
 
 # st.session_state.style = st.select_slider(
 #      'Customizing your NFT',
