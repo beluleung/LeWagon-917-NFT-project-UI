@@ -1,6 +1,7 @@
 import streamlit as st
 from PIL import Image
 import requests
+import io
 
 
 # Set page tab display
@@ -135,12 +136,19 @@ if st.session_state.tracker:
                                                         'content_image':st.session_state.gan_res},
                                                         params=params, stream=True
                                                         ) as trans_res:
+                st.session_state.trans_res_content = trans_res.content
                 for line in trans_res.iter_content(chunk_size=786432):
                     st.session_state.img = Image.frombytes('RGB', (512,512), line, 'raw')
                     imageLocation1.image(st.session_state.img, caption='FINAL OUTPUT')
-        st.success('PAWLAROID and GET R$CH', icon="💰")
-        bgbg = requests.post(bg_url+'/colour_nft', files={'img':st.session_state.img.tobytes()}).content
-        imageLocation1.image(bgbg, caption='FINAL OUTPUT')
+
+            trans_res_image = Image.frombytes('RGB', (512,512), st.session_state.trans_res_content, 'raw')
+            img_bytes_arr = io.BytesIO()
+            trans_res_image.save(img_bytes_arr, format='JPEG')
+            img_bytes_arr = img_bytes_arr.getvalue()
+            st.success('PAWLAROID and GET R$CH', icon="💰")
+
+            bgbg = requests.post(bg_url+'/colour_nft', files={'img':img_bytes_arr}).content
+            imageLocation1.image(bgbg, caption='FINAL OUTPUT')
 
 
 # st.session_state.style = st.select_slider(
