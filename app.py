@@ -139,7 +139,7 @@ if st.session_state.tracker:
                     img = Image.frombytes('RGB', (512,512), line, 'raw')
                     imageLocation1.image(img, caption='FINAL OUTPUT')
         st.success('PAWLAROID and GET R$CH', icon="💰")
-        bgbg = requests.post(bg_url+'/colour_nft', files={'img':img}).content
+        bgbg = requests.post(bg_url+'/colour_nft', files={'img':img.tobytes()}).content
         imageLocation1.image(bgbg, caption='FINAL OUTPUT')
 
 
