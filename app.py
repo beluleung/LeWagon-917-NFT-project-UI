@@ -36,7 +36,7 @@ if 'style' not in st.session_state:
 # api url
 bg_url = 'https://rembg-with-model-xu4pc2grda-ew.a.run.app'
 cat_url = 'https://gan-api-l6f5cicmxa-as.a.run.app/guttercatgang'
-dog_url = 'https://gan-api-l6f5cicmxa-as.a.run.app/gutterdogsE400'
+dog_url = 'https://gan-api-l6f5cicmxa-ew.a.run.app/thedogepoundE450'
 trans_url = 'http://34.70.32.163:9000'
 
 # Cover and title of app
@@ -139,7 +139,7 @@ if st.session_state.tracker:
                 for line in trans_res.iter_content(chunk_size=786432):
                     img = Image.frombytes('RGB', (512,512), line, 'raw')
                     imageLocation1.image(img, caption='FINAL OUTPUT')
-        st.success('MINT IT AND GET R$CH NOW', icon="💰")
+        st.success('PAWLAROID and GET R$CH', icon="💰")
 
 # st.session_state.style = st.select_slider(
 #      'Customizing your NFT',
