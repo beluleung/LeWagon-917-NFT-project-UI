@@ -37,10 +37,10 @@ if 'style' not in st.session_state:
 bg_url = 'https://rembg-with-model-xu4pc2grda-ew.a.run.app'
 cat_url = 'https://gan-api-l6f5cicmxa-as.a.run.app/guttercatgang'
 dog_url = 'https://gan-api-l6f5cicmxa-as.a.run.app/gutterdogsE400'
-trans_url = 'http://34.133.155.163:9000'
+trans_url = 'http://34.70.32.163:9000'
 
 # Cover and title of app
-st.image('NFT_cover.png', width=1300)
+st.image('NFT_cover.png')
 st.markdown("---")
 
 
