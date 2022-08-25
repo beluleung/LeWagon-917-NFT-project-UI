@@ -114,8 +114,8 @@ st.markdown("---")
 c1, c2, c3 = st.columns(3)
 c4, c5, c6 = st.columns(3)
 
-params = {'epochs' : 70,
-        'steps_per_epoch' : 20,
+params = {'epochs' : 2,
+        'steps_per_epoch' : 2,
         'style_weight' : 0.05,
         'content_weight' : 0.09,
         'total_variation_weight' : 2}
@@ -139,7 +139,6 @@ if st.session_state.tracker:
                     img = Image.frombytes('RGB', (512,512), line, 'raw')
                     imageLocation1.image(img, caption='FINAL OUTPUT')
         st.success('PAWLAROID and GET R$CH', icon="💰")
-        bg_nft = requests.get(bg_url).content
         bgbg = requests.post(bg_url+'/colour_nft', files={'img':img}).content
         imageLocation1.image(bgbg, caption='FINAL OUTPUT')
 
