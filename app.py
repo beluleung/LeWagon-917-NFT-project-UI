@@ -117,13 +117,12 @@ c4, c5, c6 = st.columns(3)
 params = {'epochs' : 100,
         'steps_per_epoch' : 20,
         'style_weight' : 0.05,
-        'content_weight' : 0.05,
+        'content_weight' : 0.09,
         'total_variation_weight' : 2}
 
-with c2:
-        st.write("### 😺 YOUR PAWLAROID NFT 🐶")
-
 if st.session_state.tracker:
+    with c2:
+        st.write("### 😺 YOUR PAWLAROID NFT 🐶")
     with c4:
         st.image(st.session_state.gan_res, caption='ARTIST')
     with c5:
