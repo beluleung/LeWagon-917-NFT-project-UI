@@ -139,7 +139,7 @@ if st.session_state.tracker:
                 for line in trans_res.iter_content(chunk_size=786432):
                     img = Image.frombytes('RGB', (512,512), line, 'raw')
                     imageLocation1.image(img, caption='FINAL OUTPUT')
-                    st.success('MINT IT AND R$ICH NOW', icon="💰")
+        st.success('MINT IT AND GET R$CH NOW', icon="💰")
 
 # st.session_state.style = st.select_slider(
 #      'Customizing your NFT',
