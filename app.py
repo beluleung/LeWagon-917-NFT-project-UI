@@ -117,7 +117,7 @@ c4, c5, c6 = st.columns(3)
 params = {'epochs' : 100,
         'steps_per_epoch' : 20,
         'style_weight' : 0.05,
-        'content_weight' : 0.1,
+        'content_weight' : 0.05,
         'total_variation_weight' : 2}
 
 with c2:
