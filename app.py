@@ -136,12 +136,11 @@ if st.session_state.tracker:
                                                         params=params, stream=True
                                                         ) as trans_res:
                 for line in trans_res.iter_content(chunk_size=786432):
-                    img = Image.frombytes('RGB', (512,512), line, 'raw')
-                    imageLocation1.image(img, caption='FINAL OUTPUT')
+                    st.session_state.img = Image.frombytes('RGB', (512,512), line, 'raw')
+                    imageLocation1.image(st.session_state.img, caption='FINAL OUTPUT')
         st.success('PAWLAROID and GET R$CH', icon="💰")
-        bgbg = requests.post(bg_url+'/colour_nft', files={'img':img.tobytes()}).content
-        img2 = bgbg.getvalue()
-        imageLocation1.image(img2, caption='FINAL OUTPUT')
+        bgbg = requests.post(bg_url+'/colour_nft', files={'img':st.session_state.img.tobytes()}).content
+        imageLocation1.image(bgbg, caption='FINAL OUTPUT')
 
 
 # st.session_state.style = st.select_slider(
