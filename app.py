@@ -35,7 +35,7 @@ if 'style' not in st.session_state:
 
 # api url
 bg_url = 'https://rembg-with-model-xu4pc2grda-ew.a.run.app'
-cat_url = 'https://gan-api-l6f5cicmxa-as.a.run.app/guttercatgang'
+cat_url = 'https://gan-api-l6f5cicmxa-ew.a.run.app/guttercatgang'
 dog_url = 'https://gan-api-l6f5cicmxa-ew.a.run.app/thedogepoundE450'
 trans_url = 'http://34.70.32.163:9000'
 
