@@ -38,7 +38,7 @@ if 'style' not in st.session_state:
 bg_url = 'https://rembg-with-model-xu4pc2grda-ew.a.run.app'
 cat_url = 'https://gan-api-l6f5cicmxa-ew.a.run.app/guttercatgang'
 dog_url = 'https://gan-api-l6f5cicmxa-ew.a.run.app/gutterdogsE400'
-trans_url = 'http://34.70.32.163:9000'
+trans_url = 'http://104.155.176.56:9000'
 
 # Cover and title of app
 st.image('NFT_cover.png')
@@ -115,8 +115,8 @@ st.markdown("---")
 c1, c2, c3 = st.columns(3)
 c4, c5, c6 = st.columns(3)
 
-params = {'epochs' : 2,
-        'steps_per_epoch' : 2,
+params = {'epochs' : 75,
+        'steps_per_epoch' : 20,
         'style_weight' : 0.05,
         'content_weight' : 0.09,
         'total_variation_weight' : 2}
@@ -145,10 +145,9 @@ if st.session_state.tracker:
             img_bytes_arr = io.BytesIO()
             trans_res_image.save(img_bytes_arr, format='JPEG')
             img_bytes_arr = img_bytes_arr.getvalue()
-            st.success('PAWLAROID and GET R$CH', icon="💰")
-
             bgbg = requests.post(bg_url+'/colour_nft', files={'img':img_bytes_arr}).content
             imageLocation1.image(bgbg, caption='FINAL OUTPUT')
+            st.success('PAWLAROID and GET R$CH', icon="💰")
 
 
 # st.session_state.style = st.select_slider(
